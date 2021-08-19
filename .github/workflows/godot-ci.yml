@@ -2,7 +2,7 @@ name: "godot-ci export"
 on:
   push:
     branches: 
-      - main
+      - master
 
 env:
   GODOT_VERSION: 3.3.2
