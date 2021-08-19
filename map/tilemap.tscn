@@ -8,4 +8,4 @@
 script = ExtResource( 3 )
 
 [node name="Player" parent="." index="3" instance=ExtResource( 2 )]
-position = Vector2( 955.766, 14.4101 )
+position = Vector2( 47.8064, 238.576 )
