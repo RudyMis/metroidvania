@@ -5,6 +5,8 @@ extends EditorImportPlugin
 enum Presets { PRESET_DEFAULT, PRESET_COLLISIONS }
 var LDtk = preload("LDtk.gd").new()
 
+var prefixes : Dictionary = {"A" : Area2D}
+
 
 func get_importer_name():
 	return "LDtk.import"
@@ -87,7 +89,17 @@ func import(source_file, save_path, options, platform_v, r_gen_files):
 		#add layers
 		var layerInstances = get_level_layerInstances(level, options)
 		for layerInstance in layerInstances:
-			new_level.add_child(layerInstance)
+			var pref = get_matching_prefix(layerInstance.name)
+			if pref != "":
+				var node = prefixes[pref].new()
+				new_level.add_child(node)
+				node.set_owner(map)
+				node.add_child(layerInstance)
+				layerInstance.set_name(layerInstance.name.right(pref.length() + 1))
+				node.set_name(layerInstance.name)
+				layerInstance.set_collision_use_parent(true)
+			else:
+				new_level.add_child(layerInstance)
 			layerInstance.set_owner(map)
 
 			for child in layerInstance.get_children():
@@ -137,3 +149,10 @@ func get_level_layerInstances(level, options):
 		i -= 1
 
 	return layers
+
+func get_matching_prefix(text : String) -> String:
+	for pref in prefixes: # Iteruje po kluczach
+		if (text.begins_with(pref) && 
+			(text.length() > pref.length() && text[pref.length()] == '_')):
+			return pref
+	return ""

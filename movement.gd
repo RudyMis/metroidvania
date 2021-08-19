@@ -15,6 +15,7 @@ var b_do_jump := false
 var velocity := Vector2.ZERO
 var b_is_jumping := false
 var b_is_falling := false
+var b_is_climbing
 
 onready var t_late_jump := $"Late Jump"
 
