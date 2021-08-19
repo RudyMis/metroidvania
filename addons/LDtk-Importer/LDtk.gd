@@ -169,14 +169,23 @@ func new_tileset(tilemap_data, tileset_data):
 			
 			for data in tileset_data.customData:
 				if tileId == data.tileId:
-					var jsonObj = parse_json(data.data)
-					
-					if "light_occluder_shape" in data.data:
-						tileset.tile_set_light_occluder(tileId, get_tile_light_occluder_custom_shape(tileId, jsonObj.light_occluder_shape))
-					elif "light_occluder" in jsonObj and jsonObj.light_occluder == true: 
-						tileset.tile_set_light_occluder(tileId, get_tile_light_occluder(tileId, tileset_data))
-
+					parse_tile_custom_data(tileset_data, tileset, tileId, data)
 	return tileset
+
+func parse_tile_custom_data(tileset_data, tileset, tileId, data):
+	var jsonObj = parse_json(data.data)
+	print(jsonObj)
+	if "collision" in jsonObj:
+		if jsonObj.collision == "rect":
+			tileset.tile_set_shape(tileId, 0, get_tile_collision_rect(tileId, tileset_data))
+	
+	if "name" in jsonObj:
+		tileset.tile_set_name(tileId, jsonObj.name)
+	
+	if "light_occluder_shape" in data.data:
+		tileset.tile_set_light_occluder(tileId, get_tile_light_occluder_custom_shape(tileId, jsonObj.light_occluder_shape))
+	elif "light_occluder" in jsonObj and jsonObj.light_occluder == true: 
+		tileset.tile_set_light_occluder(tileId, get_tile_light_occluder(tileId, tileset_data))
 
 
 #get layer tileset_data by layerDefUid.
@@ -196,7 +205,7 @@ func get_layer_tileset_data(layerDefUid):
 
 
 #get tile region(Rect2) by tileId.
-func get_tile_region(tileId, tileset_data):
+func get_tile_region(tileId, tileset_data) -> Rect2:
 	var padding = tileset_data.padding
 	var spacing = tileset_data.spacing
 	var atlasGridSize = tileset_data.tileGridSize
@@ -301,17 +310,27 @@ func get_collision_shape(tile_size, start_position, end_position, tile_count):
 	
 	return col_shape
 
-# Returns a OccluderPolygon2D for the given tile
-func get_tile_light_occluder(tileId, tileset_data):
+# Returns array of tile's corner points
+func get_tile_points(tileId, tileset_data) -> PoolVector2Array:
 	var region = get_tile_region(tileId, tileset_data)
-	var polygon = OccluderPolygon2D.new()
 	
-	polygon.set_polygon(PoolVector2Array([
+	return PoolVector2Array([
 		Vector2(region.size.x, 0), # top right
 		region.size,               # bottom right
 		Vector2(0, region.size.y), # bottom left
 		Vector2.ZERO               # top left
-	]))
+	])
+
+func get_tile_collision_rect(tileId, tileset_data) -> ConvexPolygonShape2D:
+	var rect = ConvexPolygonShape2D.new()
+	rect.points = get_tile_points(tileId, tileset_data)
+	return rect
+
+# Returns a OccluderPolygon2D for the given tile
+func get_tile_light_occluder(tileId, tileset_data):
+	var polygon = OccluderPolygon2D.new()
+	
+	polygon.polygon = get_tile_points(tileId, tileset_data)
 	
 	return polygon
 
