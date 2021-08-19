@@ -5,6 +5,7 @@ export (float) var acceleration_time := 0.2
 export (float) var deceleration_time := 0.1
 export (float) var jump_speed
 export (float) var jump_height # Skacze ciutkę ponad tą wysokość bo jakieś błędy
+export (float) var late_jump_time = 0.1
 
 onready var character : KinematicBody2D = get_parent()
 
@@ -13,6 +14,12 @@ var b_do_jump := false
 
 var velocity := Vector2.ZERO
 var b_is_jumping := false
+var b_is_falling := false
+
+onready var t_late_jump := $"Late Jump"
+
+func can_jump():
+	return (character.is_on_floor() || t_late_jump.get_time_left() > 0)
 
 func movement(delta : float):
 	if input_value.x != 0:
@@ -30,31 +37,37 @@ func movement(delta : float):
 		if s != sign(velocity.x) || velocity.x == 0:
 			velocity.x = 0
 
-
 # Calculates only first half of jump (when character goes up)
 func jump(delta : float):
 	if !b_do_jump: # Stop jumping
-		velocity.y = max(velocity.y, 0)
+		velocity.y = max(velocity.y, 1)
 		b_is_jumping = false
 		return
-	
+
+	if can_jump(): # Start jumping
+		b_is_jumping = true
+		t_late_jump.stop()
+		velocity.y = -jump_speed
+
 	if (velocity.y > 0 && !character.is_on_floor()) || character.is_on_ceiling(): # Fall
 		b_is_jumping = false
 		b_do_jump = false
-		return
-
-	if character.is_on_floor(): # Start jumping
-		b_is_jumping = true
-		velocity.y = -jump_speed
 
 func fall(delta : float):
 	if character.is_on_floor() && velocity.y >= 0:
 		velocity.y = 1 # If it was 0, body wouldn't touch continously the ground
+		b_is_falling = false
 		return
+	
+	if !b_is_falling:
+		b_is_falling = true
+		# Last-time jump
+		if velocity.y >= 0:
+			print("Liczę")
+			t_late_jump.start()
 	
 	if velocity.y >= jump_speed: return
 	velocity.y += delta * (jump_speed * jump_speed) / (2 * jump_height)
-
 
 func _input(event : InputEvent):
 	input_value = Vector2.ZERO
@@ -71,10 +84,13 @@ func _input(event : InputEvent):
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	pass
 
 func _physics_process(delta):
 	movement(delta)
+	# Jeśli jump przed fall to dąży do jump_height od dołu przy jump_speed -> 0
+	# W przeciwnym wypadku dąży do jump_height od góry przy jump_speed -> inf
 	fall(delta)
 	jump(delta)
-	character.move_and_slide(velocity, Vector2(0, -1))
+	
+	character.move_and_slide(velocity, Vector2.UP)

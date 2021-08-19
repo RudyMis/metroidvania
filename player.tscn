@@ -19,6 +19,12 @@ script = ExtResource( 1 )
 max_speed = 80.0
 jump_speed = 200.0
 jump_height = 44.0
+late_jump_time = 1.0
+
+[node name="Late Jump" type="Timer" parent="Movement"]
+process_mode = 0
+wait_time = 0.1
+one_shot = true
 
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
