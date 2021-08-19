@@ -64,7 +64,6 @@ func fall(delta : float):
 		b_is_falling = true
 		# Last-time jump
 		if velocity.y >= 0:
-			print("Liczę")
 			t_late_jump.start()
 	
 	if velocity.y >= jump_speed: return
