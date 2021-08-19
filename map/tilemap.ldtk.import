@@ -1,0 +1,17 @@
+[remap]
+
+importer="LDtk.import"
+type="PackedScene"
+path="res://.import/tilemap.ldtk-2a6b3ec0321db021b87893a2977c7067.tscn"
+
+[deps]
+
+source_file="res://map/tilemap.ldtk"
+dest_files=[ "res://.import/tilemap.ldtk-2a6b3ec0321db021b87893a2977c7067.tscn" ]
+
+[params]
+
+Import_Collisions=true
+Import_Custom_Entities=true
+Import_Metadata=true
+Import_YSort_Entities_Layer=false

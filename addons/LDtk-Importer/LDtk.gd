@@ -174,7 +174,7 @@ func new_tileset(tilemap_data, tileset_data):
 
 func parse_tile_custom_data(tileset_data, tileset, tileId, data):
 	var jsonObj = parse_json(data.data)
-	print(jsonObj)
+
 	if "collision" in jsonObj:
 		if jsonObj.collision == "rect":
 			tileset.tile_set_shape(tileId, 0, get_tile_collision_rect(tileId, tileset_data))
@@ -186,7 +186,6 @@ func parse_tile_custom_data(tileset_data, tileset, tileId, data):
 		tileset.tile_set_light_occluder(tileId, get_tile_light_occluder_custom_shape(tileId, jsonObj.light_occluder_shape))
 	elif "light_occluder" in jsonObj and jsonObj.light_occluder == true: 
 		tileset.tile_set_light_occluder(tileId, get_tile_light_occluder(tileId, tileset_data))
-
 
 #get layer tileset_data by layerDefUid.
 func get_layer_tileset_data(layerDefUid):
