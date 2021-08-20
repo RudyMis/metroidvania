@@ -1,0 +1,14 @@
+[gd_resource type="Resource" load_steps=2 format=2]
+
+[ext_resource path="res://map-loader/map-loader-data.gd" type="Script" id=1]
+
+[resource]
+script = ExtResource( 1 )
+placeholders = [ Object(Node2D,"_import_path":NodePath(""),"pause_mode":0,"process_priority":0,"visible":true,"modulate":Color( 1, 1, 1, 1 ),"self_modulate":Color( 1, 1, 1, 1 ),"show_behind_parent":false,"light_mask":1,"material":null,"use_parent_material":false,"position":Vector2( 0, 0 ),"rotation":0.0,"scale":Vector2( 1, 1 ),"z_index":0,"z_as_relative":true,"script":Resource( "res://map-loader/level-placeholder.gd" ),"rect":Rect2( 0, 0, 512, 256 ),"scene_path":"res://map/map-subscenes/Wioska_Startowa.tscn")
+, Object(Node2D,"_import_path":NodePath(""),"pause_mode":0,"process_priority":0,"visible":true,"modulate":Color( 1, 1, 1, 1 ),"self_modulate":Color( 1, 1, 1, 1 ),"show_behind_parent":false,"light_mask":1,"material":null,"use_parent_material":false,"position":Vector2( 0, 0 ),"rotation":0.0,"scale":Vector2( 1, 1 ),"z_index":0,"z_as_relative":true,"script":Resource( "res://map-loader/level-placeholder.gd" ),"rect":Rect2( 512, -64, 464, 432 ),"scene_path":"res://map/map-subscenes/Tutorial.tscn")
+, Object(Node2D,"_import_path":NodePath(""),"pause_mode":0,"process_priority":0,"visible":true,"modulate":Color( 1, 1, 1, 1 ),"self_modulate":Color( 1, 1, 1, 1 ),"show_behind_parent":false,"light_mask":1,"material":null,"use_parent_material":false,"position":Vector2( 0, 0 ),"rotation":0.0,"scale":Vector2( 1, 1 ),"z_index":0,"z_as_relative":true,"script":Resource( "res://map-loader/level-placeholder.gd" ),"rect":Rect2( 976, -64, 272, 408 ),"scene_path":"res://map/map-subscenes/Tutorial_2.tscn")
+ ]
+right = [ 2, 1, 0 ]
+left = [ 0, 1, 2 ]
+up = [ 0, 1, 2 ]
+down = [ 0, 2, 1 ]

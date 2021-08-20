@@ -8,10 +8,20 @@
 
 config_version=4
 
+_global_script_classes=[ {
+"base": "Resource",
+"class": "MapData",
+"language": "GDScript",
+"path": "res://map-loader/map-loader-data.gd"
+} ]
+_global_script_class_icons={
+"MapData": ""
+}
+
 [application]
 
 config/name="metroidvania"
-run/main_scene="res://map/tilemap.tscn"
+run/main_scene="res://map-loader/map-loader.tscn"
 config/icon="res://icon.png"
 
 [display]
