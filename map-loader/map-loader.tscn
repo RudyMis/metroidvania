@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://map-loader/map-loader.gd" type="Script" id=1]
+[ext_resource path="res://map-loader/tilemap.tscn" type="PackedScene" id=2]
+
+[node name="MapLoader" type="Node2D"]
+script = ExtResource( 1 )
+scene_path = "res://map/tilemap.tscn"
+placeholder = ExtResource( 2 )

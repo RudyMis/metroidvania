@@ -56,16 +56,20 @@ func get_import_options(preset):
 		{
 			"name": "Import_Custom_Entities",
 			"default_value": true,
-			"hint_string": "If true, will only use this project's scenes. If false, will import objects as simple scenes."
+			"hint_string": "Import entities as this project's scenes."
 		},
 		{
 			"name": "Import_Metadata",
 			"default_value": true,
-			"hint_string": "If true, will import entity fields as metadata."
+			"hint_string": "Import entity fields as metadata."
 		},
 		{
 			"name": "Import_YSort_Entities_Layer",
 			"default_value": false
+		},
+		{
+			"name": "Subscenes_Save_Folder",
+			"default_value": "res://"
 		}
 	]
 
@@ -73,47 +77,63 @@ func get_option_visibility(option, options):
 	return true
 
 func import(source_file, save_path, options, platform_v, r_gen_files):
-	#load LDtk map
+	# load LDtk map
 	LDtk.map_data = source_file
 
 	var map = Node2D.new()
 	map.name = source_file.get_file().get_basename()
 	
-	#add levels as Node2D
+	# add levels as Node2D
 	for level in LDtk.map_data.levels:
-		var new_level = Node2D.new()
-		new_level.name = level.identifier
+		var new_level = load(import_level(level, options)).instance()
 		map.add_child(new_level)
 		new_level.set_owner(map)
-
-		#add layers
-		var layerInstances = get_level_layerInstances(level, options)
-		for layerInstance in layerInstances:
-			var pref = get_matching_prefix(layerInstance.name)
-			if pref != "":
-				var node = prefixes[pref].new()
-				new_level.add_child(node)
-				node.set_owner(map)
-				node.add_child(layerInstance)
-				layerInstance.set_name(layerInstance.name.right(pref.length() + 1))
-				node.set_name(layerInstance.name)
-				layerInstance.set_collision_use_parent(true)
-			else:
-				new_level.add_child(layerInstance)
-			layerInstance.set_owner(map)
-
-			for child in layerInstance.get_children():
-				child.set_owner(map)
-				
-				if not options.Import_Custom_Entities:
-					for grandchild in child.get_children():
-						grandchild.set_owner(map)
 
 	var packed_scene = PackedScene.new()
 	packed_scene.pack(map)
 
 	return ResourceSaver.save("%s.%s" % [save_path, get_save_extension()], packed_scene)
 
+func import_level(level, options) -> String:
+	var new_level = preload("LDtkLevel/LDtkLevel.tscn").instance()
+	var save_path = options.Subscenes_Save_Folder + "/" + level.identifier + "." + get_save_extension() 
+	 
+	new_level.name = level.identifier
+	new_level.scene_path = save_path
+	new_level.rect = Rect2(Vector2(level.worldX, level.worldY), Vector2(level.pxWid, level.pxHei))
+
+	# add layers
+	var layerInstances = get_level_layerInstances(level, options)
+	for layerInstance in layerInstances:
+		var pref = get_matching_prefix(layerInstance.name)
+		if pref != "":
+			var node = prefixes[pref].new()
+			new_level.add_child(node)
+			node.set_owner(new_level)
+			node.add_child(layerInstance)
+			layerInstance.set_name(layerInstance.name.right(pref.length() + 1))
+			node.set_name(layerInstance.name)
+			layerInstance.set_collision_use_parent(true)
+		else:
+			new_level.add_child(layerInstance)
+		layerInstance.set_owner(new_level)
+
+		for child in layerInstance.get_children():
+			child.set_owner(new_level)
+			
+			if not options.Import_Custom_Entities:
+				for grandchild in child.get_children():
+					grandchild.set_owner(new_level)
+	
+	# Save level as separate file
+	var packed_level = PackedScene.new()
+	packed_level.pack(new_level)
+	var err = ResourceSaver.save(save_path, packed_level)
+	if err != OK:
+		print("Error while saving files %i" % err)
+		return ""
+	
+	return save_path
 
 #create layers in level
 func get_level_layerInstances(level, options):

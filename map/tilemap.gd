@@ -13,5 +13,6 @@ func get_current_tilemap(pos : Vector2, tilemap_name : String) -> TileMap:
 	return null
 
 func _ready():
-	pass # Replace with function body.
+	pass
+
 
