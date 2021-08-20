@@ -55,12 +55,14 @@ func paths_to_nodes(paths : Array) -> Array:
 		res.push_back(map_loader.get_node(path))
 	return res
 
-static func load_data(from : String) -> MapData:
+static func load_data(from : String, node : Node) -> MapData:
 	var data : MapData = ResourceLoader.load(from, "MapData")
+	data.map_loader = node
+	data.placeholders = data.paths_to_nodes(data.p_paths)
 	return data
 
 func save(to : String):
-	p_paths
+	p_paths = nodes_to_paths(placeholders)
 	ResourceSaver.save(to, self)
 
 func find_current_level(position : Vector2):
@@ -70,5 +72,5 @@ func find_current_level(position : Vector2):
 	print("Gracz wypadł z mapy potencjalnie")
 	return null
 
-func _ready():
-	pass # Replace with function body.
+func _init():
+	clear()

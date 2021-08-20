@@ -68,6 +68,7 @@ func load_part(ph : Node):
 func first_load():
 	player = get_tree().get_nodes_in_group("Player")[0]
 	
+	data = MapData.load_data(save_file, self)
 	data.init(self)
 	
 	var current = data.find_current_level(player.position)
