@@ -56,7 +56,7 @@ func paths_to_nodes(paths : Array) -> Array:
 	return res
 
 static func load_data(from : String, node : Node) -> MapData:
-	var data : MapData = ResourceLoader.load(from, "MapData")
+	var data : MapData = ResourceLoader.load(from)
 	data.map_loader = node
 	data.placeholders = data.paths_to_nodes(data.p_paths)
 	return data

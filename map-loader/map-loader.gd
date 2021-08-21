@@ -11,6 +11,7 @@ export (float) var unload_distance = 200
 var player : KinematicBody2D = null
 
 var data := MapData.new()
+var loader = ThreadedLoad.new()
 
 func set_create(value : bool):
 	destroy_map()
@@ -57,13 +58,15 @@ func destroy_map():
 		remove_child(child)
 		child.queue_free()
 
-func load_part(ph : Node):
+func queue_load(ph : Node):
 	if !("scene_path" in ph): return
 	
-	# TODO: interaktywny load w innym wątku
-	var scene = load(ph.scene_path).instance()
-	add_child(scene)
-	ph.loaded_scene = scene
+
+func add_loaded_scenes():
+	var scene = loader.get_loaded_scene()
+	if scene == null: return
+	add_child(scene.instance())
+	add_loaded_scenes()
 
 func first_load():
 	player = get_tree().get_nodes_in_group("Player")[0]
@@ -71,12 +74,15 @@ func first_load():
 	data = MapData.load_data(save_file, self)
 	data.init(self)
 	
-	var current = data.find_current_level(player.position)
-	if current == null: return
-	load_part(current)
+	var current_level = data.find_current_level(player.position)
+	if current_level == null || !("scene_path" in current_level): return
+	loader.queue_load(current_level.scene_path)
 
 
 func _ready():
 	if Engine.editor_hint: return
+	
+	loader.start()
+	loader.connect("loaded", self, "add_loaded_scenes")
 	
 	first_load()

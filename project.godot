@@ -13,9 +13,15 @@ _global_script_classes=[ {
 "class": "MapData",
 "language": "GDScript",
 "path": "res://map-loader/map-loader-data/map-loader-data.gd"
+}, {
+"base": "Node",
+"class": "ThreadedLoad",
+"language": "GDScript",
+"path": "res://threaded-load/threaded-load.gd"
 } ]
 _global_script_class_icons={
-"MapData": ""
+"MapData": "",
+"ThreadedLoad": ""
 }
 
 [application]
