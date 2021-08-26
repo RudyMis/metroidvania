@@ -82,8 +82,8 @@ func import(source_file, save_path, options, platform_v, r_gen_files):
 
 	var map = Node2D.new()
 	map.name = source_file.get_file().get_basename()
-	
-	# add levels as Node2D
+
+	# add levels as paths
 	for level in LDtk.map_data.levels:
 		var new_level = load(import_level(level, options)).instance()
 		map.add_child(new_level)
@@ -95,11 +95,10 @@ func import(source_file, save_path, options, platform_v, r_gen_files):
 	return ResourceSaver.save("%s.%s" % [save_path, get_save_extension()], packed_scene)
 
 func import_level(level, options) -> String:
-	var new_level = preload("LDtkLevel/LDtkLevel.tscn").instance()
-	var save_path = options.Subscenes_Save_Folder + "/" + level.identifier + "." + get_save_extension() 
+	var subscenes_save_path = options.Subscenes_Save_Folder + "/" + level.identifier + "." + get_save_extension() 
 	 
+	var new_level = preload("LDtkLevel/LDtkLevel.tscn").instance()
 	new_level.name = level.identifier
-	new_level.scene_path = save_path
 	new_level.rect = Rect2(Vector2(level.worldX, level.worldY), Vector2(level.pxWid, level.pxHei))
 
 	# add layers
@@ -128,12 +127,12 @@ func import_level(level, options) -> String:
 	# Save level as separate file
 	var packed_level = PackedScene.new()
 	packed_level.pack(new_level)
-	var err = ResourceSaver.save(save_path, packed_level)
+	var err = ResourceSaver.save(subscenes_save_path, packed_level)
 	if err != OK:
 		print("Error while saving files %i" % err)
 		return ""
 	
-	return save_path
+	return subscenes_save_path
 
 #create layers in level
 func get_level_layerInstances(level, options):

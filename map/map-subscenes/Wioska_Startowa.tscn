@@ -106,7 +106,6 @@ points = PoolVector2Array( 8, 0, 8, 8, 0, 8, 0, 0 )
 [node name="Wioska_Startowa" type="Node2D"]
 script = ExtResource( 1 )
 rect = Rect2( 0, 0, 512, 256 )
-scene_path = "res://map/map-subscenes//Wioska_Startowa.tscn"
 
 [node name="Ground" type="TileMap" parent="."]
 z_index = 1
@@ -120,3 +119,4 @@ z_index = 2
 tile_set = SubResource( 6 )
 cell_size = Vector2( 8, 8 )
 format = 1
+tile_data = PoolIntArray( 851977, 1, 0 )

@@ -9,10 +9,10 @@
 config_version=4
 
 _global_script_classes=[ {
-"base": "Resource",
-"class": "MapData",
+"base": "Node2D",
+"class": "LDtkLevel",
 "language": "GDScript",
-"path": "res://map-loader/map-loader-data/map-loader-data.gd"
+"path": "res://addons/LDtk-Importer/LDtkLevel/LDtkLevel.gd"
 }, {
 "base": "Node",
 "class": "ThreadedLoad",
@@ -20,14 +20,14 @@ _global_script_classes=[ {
 "path": "res://threaded-load/threaded-load.gd"
 } ]
 _global_script_class_icons={
-"MapData": "",
+"LDtkLevel": "",
 "ThreadedLoad": ""
 }
 
 [application]
 
 config/name="metroidvania"
-run/main_scene="res://map-loader/map-loader.tscn"
+run/main_scene="res://map/map.tscn"
 config/icon="res://icon.png"
 
 [display]
