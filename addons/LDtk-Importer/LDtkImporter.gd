@@ -5,7 +5,7 @@ extends EditorImportPlugin
 enum Presets { PRESET_DEFAULT, PRESET_COLLISIONS }
 var LDtk = preload("LDtk.gd").new()
 
-var prefixes : Dictionary = {"A" : Area2D}
+var node_type : Dictionary = {"A" : Area2D}
 
 
 func get_importer_name():
@@ -95,23 +95,31 @@ func import(source_file, save_path, options, platform_v, r_gen_files):
 	return ResourceSaver.save("%s.%s" % [save_path, get_save_extension()], packed_scene)
 
 func import_level(level, options) -> String:
-	var subscenes_save_path = options.Subscenes_Save_Folder + "/" + level.identifier + "." + get_save_extension() 
-	 
-	var new_level = preload("LDtkLevel/LDtkLevel.tscn").instance()
+	var level_save_path = options.Subscenes_Save_Folder + "/" + level.identifier + "." + get_save_extension() 
+	
+	var file_exists : bool = Directory.new().file_exists(level_save_path)
+	var new_level = load(level_save_path if file_exists else "LDtkLevel/LDtkLevel.tscn").instance()
+	
 	new_level.name = level.identifier
 	new_level.rect = Rect2(Vector2(level.worldX, level.worldY), Vector2(level.pxWid, level.pxHei))
 
 	# add layers
 	var layerInstances = get_level_layerInstances(level, options)
 	for layerInstance in layerInstances:
-		var pref = get_matching_prefix(layerInstance.name)
+		var prev_layerInstance = new_level.find_node(layerInstance.name)
+		if prev_layerInstance != null:
+			new_level.remove_child(prev_layerInstance)
+			prev_layerInstance.queue_free()
+		
+		var pref = get_matching_prefix(layerInstance.name) # Used for area2d collision
 		if pref != "":
-			var node = prefixes[pref].new()
+			var node = node_type[pref].new()
 			new_level.add_child(node)
 			node.set_owner(new_level)
 			node.add_child(layerInstance)
-			layerInstance.set_name(layerInstance.name.right(pref.length() + 1))
 			node.set_name(layerInstance.name)
+			
+			layerInstance.set_name(layerInstance.name.right(pref.length() + 1))
 			layerInstance.set_collision_use_parent(true)
 		else:
 			new_level.add_child(layerInstance)
@@ -124,15 +132,16 @@ func import_level(level, options) -> String:
 				for grandchild in child.get_children():
 					grandchild.set_owner(new_level)
 	
+	Saver.save(new_level, level_save_path)
 	# Save level as separate file
 	var packed_level = PackedScene.new()
 	packed_level.pack(new_level)
-	var err = ResourceSaver.save(subscenes_save_path, packed_level)
+	var err = ResourceSaver.save(level_save_path, packed_level)
 	if err != OK:
 		print("Error while saving files %i" % err)
 		return ""
 	
-	return subscenes_save_path
+	return level_save_path
 
 #create layers in level
 func get_level_layerInstances(level, options):
@@ -170,7 +179,7 @@ func get_level_layerInstances(level, options):
 	return layers
 
 func get_matching_prefix(text : String) -> String:
-	for pref in prefixes: # Iteruje po kluczach
+	for pref in node_type: # Iteruje po kluczach
 		if (text.begins_with(pref) && 
 			(text.length() > pref.length() && text[pref.length()] == '_')):
 			return pref

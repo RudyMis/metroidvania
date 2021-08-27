@@ -27,8 +27,12 @@ _global_script_class_icons={
 [application]
 
 config/name="metroidvania"
-run/main_scene="res://map/map.tscn"
+run/main_scene="res://game/game.tscn"
 config/icon="res://icon.png"
+
+[autoload]
+
+Saver="*res://autoload/saver.gd"
 
 [display]
 

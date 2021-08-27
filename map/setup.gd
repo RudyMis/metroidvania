@@ -2,9 +2,8 @@ tool
 extends Node
 
 export (bool) var neighbours setget set_neighbours
-export (bool) var placeholders setget set_placeholders
 
-func set_neighbours(value : bool):
+func set_neighbours(_value : bool):
 	for child in get_parent().get_children():
 		if child.is_class("LDtkLevel"):
 			child.set_neighbours(Array())
@@ -14,10 +13,7 @@ func set_neighbours(value : bool):
 					if child.rect.intersects(another_child.rect, true):
 						child.add_neighbour(another_child)
 
-			child.save_level()
-
-func set_placeholders(value : bool):
-	pass
+			Saver.save(child)
 
 func _ready():
 	pass

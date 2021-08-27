@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://game/game.gd" type="Script" id=1]
+[ext_resource path="res://entity/player/player.tscn" type="PackedScene" id=3]
+
+[node name="Game" type="Node2D"]
+script = ExtResource( 1 )
+start_level = "res://map/map-subscenes/Wioska_Startowa.tscn"
+
+[node name="Player" parent="." instance=ExtResource( 3 )]
+position = Vector2( 44.3837, 233.38 )
+
+[node name="Garbage" type="Timer" parent="."]
+autostart = true
+
+[connection signal="timeout" from="Garbage" to="." method="_on_garbage_timeout"]

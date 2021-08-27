@@ -10,8 +10,11 @@ var semaphore : Semaphore
 var exit := false # lock
 var scenes_to_load := Array() # lock
 var loaded_scenes := Array() # lock
+var started = false
 
 func start():
+	if started: return
+	started = true
 	mutex = Mutex.new()
 	thread = Thread.new()
 	semaphore = Semaphore.new()
@@ -19,11 +22,20 @@ func start():
 	thread.start(self, "_thread")
 
 func stop():
+	started = false
+
 	mutex.lock()
 	exit = true
 	mutex.unlock()
 	
 	semaphore.post()
+
+func has_loaded_scenes() -> bool:
+	mutex.lock()
+	var b_has_scene = !loaded_scenes.empty()
+	mutex.unlock()
+	
+	return b_has_scene
 
 func get_loaded_scene() -> PackedScene:
 	mutex.lock()
@@ -33,6 +45,7 @@ func get_loaded_scene() -> PackedScene:
 	return scene
 
 func queue_load(path : String):
+	if mutex == null: return
 	mutex.lock()
 	scenes_to_load.push_back(path)
 	mutex.unlock()
@@ -67,4 +80,4 @@ func _thread(_u):
 		if should_quit: return
 
 func _ready():
-	start()
+	pass
