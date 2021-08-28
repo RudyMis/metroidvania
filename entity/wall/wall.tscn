@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=2]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 4, 16 )
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 1, 16 )
+
+[node name="Wall" type="RigidBody2D"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 0, -16 )
+shape = SubResource( 1 )
+
+[node name="Hitbox" type="Area2D" parent="."]
+position = Vector2( 5, -16 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+shape = SubResource( 2 )

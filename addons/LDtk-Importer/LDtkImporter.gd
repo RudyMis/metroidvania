@@ -98,7 +98,7 @@ func import_level(level, options) -> String:
 	var level_save_path = options.Subscenes_Save_Folder + "/" + level.identifier + "." + get_save_extension() 
 	
 	var file_exists : bool = Directory.new().file_exists(level_save_path)
-	var new_level = load(level_save_path if file_exists else "LDtkLevel/LDtkLevel.tscn").instance()
+	var new_level = load(level_save_path if file_exists else "res://addons/LDtk-Importer/LDtkLevel/LDtkLevel.tscn").instance()
 	
 	new_level.name = level.identifier
 	new_level.rect = Rect2(Vector2(level.worldX, level.worldY), Vector2(level.pxWid, level.pxHei))

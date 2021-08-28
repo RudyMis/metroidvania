@@ -5,5 +5,11 @@
 
 [node name="tilemap" instance=ExtResource( 1 )]
 
+[node name="Tutorial_2" parent="." index="2"]
+neighbours = [ "res://map/map-subscenes/Tutorial.tscn", "res://map/map-subscenes/DrogaWioskaMiasto.tscn" ]
+
 [node name="setup" type="Node" parent="." index="3"]
 script = ExtResource( 2 )
+
+[node name="DrogaWioskaMiasto" parent="." index="4"]
+neighbours = [ "res://map/map-subscenes/Tutorial_2.tscn" ]

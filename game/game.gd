@@ -23,11 +23,8 @@ func load_level(path : String):
 	
 	while thread.has_loaded_scenes():
 		var level : LDtkLevel = thread.get_loaded_scene().instance()
-		if find_node(level.name) != null: 
-			print("Już jest")
-			return
+		if find_node(level.name) != null: return
 		add_child(level)
-		print(level.neighbours)
 		level.set_owner(get_tree().get_edited_scene_root())
 		level.connect("found_player", self, "_on_found_player")
 		loaded_levels.push_back(level)
@@ -68,5 +65,4 @@ func _on_garbage_timeout():
 		unload_level(level)
 
 func _on_found_player(level : LDtkLevel):
-	print(level.name)
 	change_current_level(level)
