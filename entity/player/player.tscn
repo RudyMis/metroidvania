@@ -1,14 +1,15 @@
 [gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://entity/player/movement.gd" type="Script" id=1]
-[ext_resource path="res://entity/player/player.png" type="Texture" id=2]
+[ext_resource path="res://entity/player/Movement.tscn" type="PackedScene" id=1]
+[ext_resource path="res://assets/player/player.png" type="Texture" id=2]
 
 [sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 4, 6 )
+extents = Vector2( 1.48438, 3 )
 
 [node name="Player" type="KinematicBody2D" groups=[
 "Player",
 ]]
+z_index = 128
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 1 )
@@ -16,17 +17,7 @@ shape = SubResource( 1 )
 [node name="Sprite" type="Sprite" parent="."]
 texture = ExtResource( 2 )
 
-[node name="Movement" type="Node" parent="."]
-script = ExtResource( 1 )
-max_speed = 80.0
-jump_speed = 220.0
-jump_height = 44.0
-late_jump_time = 1.0
-
-[node name="Late Jump" type="Timer" parent="Movement"]
-process_mode = 0
-wait_time = 0.1
-one_shot = true
+[node name="Movement" parent="." instance=ExtResource( 1 )]
 
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true

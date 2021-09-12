@@ -8,7 +8,7 @@ script = ExtResource( 1 )
 start_level = "res://map/map-subscenes/Wioska_Startowa.tscn"
 
 [node name="Player" parent="." instance=ExtResource( 3 )]
-position = Vector2( 36.3837, 232.38 )
+position = Vector2( 364.497, 149.541 )
 
 [node name="Garbage" type="Timer" parent="."]
 autostart = true
