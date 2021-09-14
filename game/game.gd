@@ -54,6 +54,7 @@ func change_current_level(level : LDtkLevel):
 	needed_levels = levels_to_load
 
 func _ready():
+	if Engine.editor_hint: return
 	thread.start()
 	
 	$Garbage.start()

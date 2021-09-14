@@ -10,6 +10,7 @@ extents = Vector2( 1.48438, 3 )
 "Player",
 ]]
 z_index = 128
+collision_layer = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 1 )

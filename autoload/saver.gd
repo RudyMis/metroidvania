@@ -7,12 +7,13 @@ func save(node : Node, save_path : String = ""):
 		print("Nie ma co zapisywać")
 		return
 	var pack := PackedScene.new()
-	pack.pack(node)
+	if pack.pack(node) != 0:
+		print("Błąd przy pakowaniu")
+	
 	
 	save_path = save_path if node.filename == "" else node.filename
-	var err = ResourceSaver.save(save_path, pack)
-	if err != 0:
-		print(err)
+	if ResourceSaver.save(save_path, pack) != 0:
+		print("Błąd przy zapisywaniu")
 
 func _ready():
 	pass

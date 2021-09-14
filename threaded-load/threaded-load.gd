@@ -80,4 +80,4 @@ func _thread(_u):
 		if should_quit: return
 
 func _ready():
-	pass
+	emit_signal("loaded")

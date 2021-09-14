@@ -2,14 +2,23 @@
 
 [ext_resource path="res://entity/player/movement.gd" type="Script" id=1]
 
-[node name="Movement" type="Node"]
+[node name="Movement" type="Node2D"]
 script = ExtResource( 1 )
 max_speed = 80.0
 jump_speed = 220.0
 jump_height = 44.0
 late_jump_time = 1.0
+hook_length = 60.0
+hook_speed = 200.0
 
 [node name="Late Jump" type="Timer" parent="."]
 process_mode = 0
-wait_time = 0.1
+wait_time = 0.05
 one_shot = true
+
+[node name="Movement Damping" type="Timer" parent="."]
+process_mode = 0
+wait_time = 0.02
+one_shot = true
+
+[node name="Hook" type="RayCast2D" parent="."]
