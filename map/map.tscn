@@ -7,9 +7,3 @@
 
 [node name="setup" type="Node" parent="." index="3"]
 script = ExtResource( 2 )
-
-[node name="DrogaWioskaMiasto" parent="." index="4"]
-neighbours = [ "res://map/map-subscenes/Tutorial_2.tscn", "res://map/map-subscenes/Kwadraty.tscn" ]
-
-[node name="Kwadraty" parent="." index="5"]
-neighbours = [ "res://map/map-subscenes/DrogaWioskaMiasto.tscn" ]

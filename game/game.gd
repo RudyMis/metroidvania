@@ -11,16 +11,13 @@ var thread := ThreadedLoad.new()
 
 var current_level : LDtkLevel = null setget change_current_level
 
-func load_start(value : bool):
+func load_start(_v : bool):
 	loaded_levels = Array()
 	needed_levels = Array()
-	load_level(start_level)
+	thread.queue_load(start_level)
 	needed_levels.push_back(start_level)
 
-func load_level(path : String):
-	thread.queue_load(path)
-	yield(thread, "loaded")
-	
+func load_level():
 	while thread.has_loaded_scenes():
 		var level : LDtkLevel = thread.get_loaded_scene().instance()
 		if find_node(level.name) != null: return
@@ -49,7 +46,7 @@ func change_current_level(level : LDtkLevel):
 
 	for l in levels_to_load:
 		if !needed_levels.has(l):
-			load_level(l)
+			thread.queue_load(l)
 
 	needed_levels = levels_to_load
 
@@ -59,6 +56,9 @@ func _ready():
 	
 	$Garbage.start()
 	load_start(true)
+
+func _process(_delta):
+	load_level()
 
 func _on_garbage_timeout():
 	var to_unload = find_levels_to_unload()

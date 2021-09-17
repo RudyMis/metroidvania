@@ -9,7 +9,12 @@ jump_speed = 220.0
 jump_height = 44.0
 late_jump_time = 1.0
 hook_length = 60.0
-hook_speed = 200.0
+hook_speed = 300.0
+
+[node name="Early Jump" type="Timer" parent="."]
+process_mode = 0
+wait_time = 0.05
+one_shot = true
 
 [node name="Late Jump" type="Timer" parent="."]
 process_mode = 0

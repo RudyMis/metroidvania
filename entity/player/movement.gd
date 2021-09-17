@@ -20,7 +20,8 @@ export (float) var late_jump_time = 0.1
 
 export (float) var hook_length := 50
 export (float) var hook_speed := 400
-export (float) var one_way_height_boost := 8
+export (float) var one_way_height_increase := 8
+export (float) var hook_normal_boost := 100
 
 onready var character : KinematicBody2D = get_parent()
 
@@ -32,8 +33,10 @@ var b_enable_damping := false
 var velocity := Vector2.ZERO
 var state = State.new()
 
+onready var t_early_jump := $"Early Jump"
 onready var t_late_jump := $"Late Jump"
 onready var t_movement_damp := $"Movement Damping"
+
 onready var hook_ray := $Hook
 
 func accelerate(delta : float):
@@ -84,6 +87,8 @@ func jump():
 	if !can_jump():
 		return
 	
+	t_early_jump.stop()
+	
 	state.b_jumping = true
 	t_late_jump.stop()
 	velocity.y = -jump_speed
@@ -97,6 +102,7 @@ func gravity(delta : float):
 	# Start fall
 	if !state.b_falling:
 		state.b_falling = true
+		
 		# Last-time jump
 		if velocity.y >= 0:
 			t_late_jump.start()
@@ -125,7 +131,8 @@ func cast_ray(direction : Vector2) -> Vector2:
 
 func is_one_way_hooked() -> bool:
 	assert(hook_ray.is_colliding())
-	assert(hook_ray.get_collider().is_class("TileMap"))
+	if !hook_ray.get_collider().is_class("TileMap"):
+		return false
 	
 	var collision_position = hook_ray.get_collision_point()
 	collision_position -= hook_ray.get_collision_normal()
@@ -140,8 +147,9 @@ func hook(direction : Vector2):
 	
 	state.b_hooked = true
 	
-	if is_one_way_hooked():
-		collision_point.y -= one_way_height_boost
+	var one_way : bool = is_one_way_hooked()
+	if one_way:
+		collision_point.y -= one_way_height_increase
 		direction = (collision_point - character.position).normalized() 
 	
 	
@@ -156,8 +164,11 @@ func hook(direction : Vector2):
 	yield(tween, "tween_all_completed")
 	remove_child(tween)
 	
-	state.b_hooked = false
-
+	velocity = Vector2.ZERO
+	if one_way:
+		state.b_hooked = false
+		velocity = direction * hook_normal_boost
+		t_late_jump.start()
 
 func collision():
 	
@@ -166,8 +177,18 @@ func collision():
 	
 	if character.is_on_wall():
 		velocity.x = 0
-	
-func _input(event : InputEvent):
+
+func start_jump():
+	b_do_jump = true
+	t_early_jump.start()
+	jump()
+
+func stop_jump():
+	b_do_jump = false
+	t_early_jump.stop()
+	state.b_jumping = false
+
+func _input(_e : InputEvent):
 	input_value = Vector2.ZERO
 	if Input.is_action_pressed("left"):
 		input_value.x -= 1
@@ -176,11 +197,9 @@ func _input(event : InputEvent):
 	if Input.is_action_pressed("duck"):
 		input_value.y -= 1
 	if Input.is_action_just_pressed("jump"):
-		b_do_jump = true
-		jump()
+		start_jump()
 	if Input.is_action_just_released("jump"):
-		b_do_jump = false
-		state.b_jumping = false
+		stop_jump()
 	
 	if Input.is_action_just_pressed("hook"):
 		hook((get_global_mouse_position() - character.position).normalized())
@@ -194,6 +213,9 @@ func _physics_process(delta):
 	if !state.b_hooked:
 		movement(delta)
 		gravity(delta)
+	
+	if t_early_jump.get_time_left() > 0:
+		jump()
 	
 	character.move_and_slide(velocity, Vector2.UP)
 	collision()

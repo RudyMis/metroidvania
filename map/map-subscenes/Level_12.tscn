@@ -11124,6 +11124,7 @@ points = PoolVector2Array( 8, 0, 8, 8, 0, 8, 0, 0 )
 [node name="Level_12" type="Node2D"]
 script = ExtResource( 1 )
 rect = Rect2( 2817, -1360, 520, 576 )
+neighbours = [ "res://map/map-subscenes/Level_13.tscn", "res://map/map-subscenes/Level_16.tscn", "res://map/map-subscenes/Boss.tscn" ]
 
 [node name="Ground" type="TileMap" parent="."]
 position = Vector2( 2817, -1360 )

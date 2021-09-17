@@ -1,7 +1,6 @@
-[gd_scene load_steps=211 format=2]
+[gd_scene load_steps=210 format=2]
 
 [ext_resource path="res://addons/LDtk-Importer/LDtkLevel/LDtkLevel.gd" type="Script" id=1]
-[ext_resource path="res://entity/wall/wall.tscn" type="PackedScene" id=3]
 [ext_resource path="res://assets/ground.png" type="Texture" id=5]
 
 [sub_resource type="ConvexPolygonShape2D" id=1]
@@ -11148,9 +11147,3 @@ z_index = 3
 tile_set = SubResource( 207 )
 cell_size = Vector2( 8, 8 )
 format = 1
-
-[node name="Walls" type="Node2D" parent="."]
-z_index = 4
-
-[node name="Wall" type="RigidBody2D" parent="Walls" instance=ExtResource( 3 )]
-position = Vector2( 900, 248 )

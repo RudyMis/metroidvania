@@ -31,6 +31,7 @@ func stop():
 	semaphore.post()
 
 func has_loaded_scenes() -> bool:
+	if mutex == null: return false
 	mutex.lock()
 	var b_has_scene = !loaded_scenes.empty()
 	mutex.unlock()
@@ -59,7 +60,7 @@ func _thread(_u):
 		mutex.unlock()
 		
 		if number_of_scenes != 0:
-			for i in range(number_of_scenes):
+			for _i in range(number_of_scenes):
 				mutex.lock()
 				var to_load = scenes_to_load.pop_front()
 				mutex.unlock()
